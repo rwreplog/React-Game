@@ -1,0 +1,15 @@
+name: Build
+
+on:
+  push:
+    branches: [feature/ci]
+  pull_request:
+    branches: [develop]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
