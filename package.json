@@ -9,10 +9,12 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo/webpack-config": "^0.17.2",
     "@types/react-native": "^0.69.1",
     "expo": "~46.0.13",
     "expo-status-bar": "~1.4.0",
     "react": "18.0.0",
+    "react-dom": "^18.0.0",
     "react-native": "0.69.6",
     "react-native-game-engine": "^1.2.0",
     "react-native-web": "~0.18.7"
