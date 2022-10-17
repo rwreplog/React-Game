@@ -16,6 +16,11 @@ jobs:
     # Only allow CI to start from a local push/PR or the label 'CI-Approved' is added for PRs from a forked source
     if: ( github.event.pull_request.head.repo.fork == false ) ||
       ( contains(github.event.pull_request.labels.*.name, 'CI-Approved') )
+
+    steps:
+      - name: CI Approved
+        run: echo CI Approved
+
   android:
     name: Build Android package
     needs: check_is_ci_approved
