@@ -1,7 +1,7 @@
 # Run linting, tests and other checks that are safe to run on untrusted code and without secrets.
-on: pull_request
-
 name: PR
+
+on: pull_request
 
 jobs:
   test:
