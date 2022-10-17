@@ -1,4 +1,4 @@
-name: CI
+Name: CI
 
 on:
   push:
@@ -7,36 +7,35 @@ on:
     branches: ["develop"]
     types: [opened, reopened, synchronize]
   pull_request_target:
-    types: [opened, reopened, synchronize]
+    types: [labeled]
     branches: ["develop"]
 
 jobs:
-  test:
-    name: Run tests
+  check_is_ci_approved:
     runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16.x
-          cache: npm
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run tests
-        run: npm test
-
+    # Only allow CI to start from a local push/PR or the label 'CI-Approved' is added for PRs from a forked source
+    if: ( github.event.pull_request.head.repo.fork == false ) ||
+      ( contains(github.event.pull_request.labels.*.name, 'CI-Approved') )
   android:
     name: Build Android package
-    needs: test
+    needs: check_is_ci_approved
     runs-on: ubuntu-latest
 
     steps:
+      # Local push/PR
       - uses: actions/checkout@v3
+        if: >-
+          ( github.event_name == 'pull_request' ) &&
+          ( github.event.pull_request.head.repo.fork == false )
+
+      # PR from forked source
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+        if: >-
+          ( github.event_name == 'pull_request_target' ) &&
+          ( github.event.pull_request.head.repo.fork == true )
 
       - name: Setup Node
         uses: actions/setup-node@v3
@@ -59,11 +58,24 @@ jobs:
 
   ios:
     name: Build iOS package
-    needs: test
+    needs: check_is_ci_approved
     runs-on: ubuntu-latest
 
     steps:
+      # Local push/PR
       - uses: actions/checkout@v3
+        if: >-
+          ( github.event_name == 'pull_request' ) &&
+          ( github.event.pull_request.head.repo.fork == false )
+
+      # PR from forked source
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+        if: >-
+          ( github.event_name == 'pull_request_target' ) &&
+          ( github.event.pull_request.head.repo.fork == true )
 
       - name: Setup Node
         uses: actions/setup-node@v3
