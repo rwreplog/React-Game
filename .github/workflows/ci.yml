@@ -42,7 +42,7 @@ jobs:
         uses: expo/expo-github-action@v7
         with:
           expo-version: latest
-          eas-version: latest
+          eas-version: 2.3.0
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Install Dependencies
