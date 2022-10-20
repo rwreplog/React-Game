@@ -18,16 +18,23 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "io.github.rwreplog",
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "io.github.rwreplog"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3cce093e-736e-4194-ab50-f2f614fc35bf"
+      }
     }
   }
 }

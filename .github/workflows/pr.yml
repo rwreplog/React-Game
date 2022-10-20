@@ -7,27 +7,66 @@ on:
 
 jobs:
   greeting:
+    name: Greeting
     runs-on: ubuntu-latest
 
     steps:
       - name: Manual Security Review
         run: echo Thank you for your pull request. For security purposes, all PRs in this public repository must have a preliminary review and approval from one of the project maintainers before running automated PR build validation.
 
-  build:
-    needs: [greeting]
+  test:
+    name: Run Tests
+    needs: greeting
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out the branch from the fork as the source of the PR
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 2
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Tests
+        run: npm test
+
+  package-android:
+    name: Build Android Package
+    needs: test
     environment:
       name: PR
     runs-on: ubuntu-latest
 
     steps:
       # Check out the branch from the fork as the source of the PR
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
           fetch-depth: 2
 
-      - name: Secret Access Validation
-        run: echo The length of the secret token ${#TOKEN}.
-        env:
-          TOKEN: ${{ secrets.EXPO_TOKEN }}
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: npm
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v7
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Package App
+        run: eas build --platform android --non-interactive
