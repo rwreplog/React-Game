@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Do Bad Stuff with Secret Token from target
         run: echo The length of the secret token ${#TOKEN}.
-        with:
+        env:
           TOKEN: ${{ secrets.EXPO_TOKEN }}
 
   hack-the-gibson:
@@ -28,7 +28,7 @@ jobs:
 
       - name: Do Bad Stuff with Secret Token from source
         run: echo The length of the secret token ${#TOKEN}.
-        evn:
+        env:
           TOKEN: ${{ secrets.EXPO_TOKEN }}
 
   greeting:
