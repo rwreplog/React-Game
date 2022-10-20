@@ -20,11 +20,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Check out the branch from the fork as the source of the PR
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 2
 
       - name: Setup Node
         uses: actions/setup-node@v3
@@ -46,11 +44,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Check out the branch from the fork as the source of the PR
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 2
 
       - name: Setup Node
         uses: actions/setup-node@v3
