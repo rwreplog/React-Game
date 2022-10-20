@@ -29,5 +29,5 @@ jobs:
 
       - name: Secret Access Validation
         run: echo The length of the secret token ${#TOKEN}.
-        with:
+        env:
           TOKEN: ${{ secrets.EXPO_TOKEN }}
