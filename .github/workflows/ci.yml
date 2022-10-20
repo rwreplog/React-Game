@@ -1,0 +1,17 @@
+name: CI
+
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Secret Access Validation
+        run: echo Hello, world! The length of the token length is ${#TOKEN}.
+        with:
+          TOKEN: ${{ secrets.EXPO_TOKEN }}

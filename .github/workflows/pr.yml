@@ -1,0 +1,32 @@
+name: Pull Request
+
+on:
+  pull_request_target:
+    branches: [develop]
+
+jobs:
+  greeting:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Manual Security Review
+        run: echo Thank you for your pull request. For security purposes, all PRs must have a preliminary review and approval before running automated PR build validation.
+
+  build:
+    needs: [greeting]
+    environment:
+      name: PR
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out branch from the fork repo as the source of the PR
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          fetch-depth: 2
+
+      - name: Secret Access Validation
+        run: echo Hello, world! The length of the token length is ${#TOKEN}.
+        with:
+          TOKEN: ${{ secrets.EXPO_TOKEN }}
