@@ -1,11 +1,11 @@
-import Constants from "../Constants";
+import Constants from "../Constants/Constants";
 const randomPositions = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 export default function (entities, { events, dispatch }) {
   const head = entities.head;
-  //   const food = entities.food;
-  //   const tail = entities.tail;
+  const food = entities.food;
+  const tail = entities.tail;
   if (events.length) {
     events.forEach((e) => {
       switch (e) {

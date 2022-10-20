@@ -22,6 +22,8 @@ import React, { useRef, useState, Fragment } from "react";
 import GameLoop from "./systems/GameLoop";
 import Constants from "./Constants/Constants";
 import Player from "./components/player";
+import Food from "./components/food";
+import Tail from "./components/tail";
 
 export default function App() {
   const BoardSize = Constants.GRID_SIZE * Constants.CELL_SIZE;
@@ -41,23 +43,23 @@ export default function App() {
         yspeed: 0,
         renderer: <Player />,
       },
-      // food: {
-      //   position: [
-      //     randomPositions(0, Constants.GRID_SIZE - 1),
-      //     randomPositions(0, Constants.GRID_SIZE - 1),
-      //   ],
-      //   size: Constants.CELL_SIZE,
-      //   updateFrequency: 10,
-      //   nextMove: 10,
-      //   xspeed: 0,
-      //   yspeed: 0,
-      //   renderer: <Player />,
-      // },
-      // tail: {
-      //   size: Constants.CELL_SIZE,
-      //   elements: [],
-      //   renderer: <Player />,
-      // },
+      food: {
+        position: [
+          randomPositions(0, Constants.GRID_SIZE - 1),
+          randomPositions(0, Constants.GRID_SIZE - 1),
+        ],
+        size: Constants.CELL_SIZE,
+        updateFrequency: 10,
+        nextMove: 10,
+        xspeed: 0,
+        yspeed: 0,
+        renderer: <Food />,
+      },
+      tail: {
+        size: Constants.CELL_SIZE,
+        elements: [],
+        renderer: <Tail />,
+      },
     });
     setIsGameRunning(true);
   };
@@ -89,19 +91,19 @@ export default function App() {
               yspeed: 0,
               renderer: <Player />,
             },
-            // food: {
-            //   position: [
-            //     randomPositions(0, Constants.GRID_SIZE - 1),
-            //     randomPositions(0, Constants.GRID_SIZE - 1),
-            //   ],
-            //   size: Constants.CELL_SIZE,
-            //   renderer: <Player />,
-            // },
-            // tail: {
-            //   size: Constants.CELL_SIZE,
-            //   elements: [],
-            //   renderer: <Player />,
-            // },
+            food: {
+              position: [
+                randomPositions(0, Constants.GRID_SIZE - 1),
+                randomPositions(0, Constants.GRID_SIZE - 1),
+              ],
+              size: Constants.CELL_SIZE,
+              renderer: <Food />,
+            },
+            tail: {
+              size: Constants.CELL_SIZE,
+              elements: [],
+              renderer: <Tail />,
+            },
           }}
           systems={[GameLoop]}
           running={isGameRunning}
