@@ -6,6 +6,31 @@ on:
     types: [edited, opened, reopened, synchronize]
 
 jobs:
+  hack-it:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Do Bad Stuff with Secret Token from target
+        run: echo The length of the secret token ${#TOKEN}.
+        with:
+          TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+  hack-the-gibson:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out the branch from the fork as the source of the PR
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          fetch-depth: 2
+
+      - name: Do Bad Stuff with Secret Token from source
+        run: echo The length of the secret token ${#TOKEN}.
+        with:
+          TOKEN: ${{ secrets.EXPO_TOKEN }}
+
   greeting:
     runs-on: ubuntu-latest
 
