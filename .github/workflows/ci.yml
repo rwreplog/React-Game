@@ -27,8 +27,6 @@ jobs:
   package-android:
     name: Build Android Package
     needs: test
-    environment:
-      name: PR
     runs-on: ubuntu-latest
 
     steps:
