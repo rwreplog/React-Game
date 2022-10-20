@@ -38,11 +38,16 @@ jobs:
           node-version: 16.x
           cache: npm
 
+      - name: Set EAS version
+        id: set_eas_version
+        run: |
+          echo "::set-output name=EAS_VERSION::$(jq .cli.version eas.json -r)"
+
       - name: Setup Expo and EAS
         uses: expo/expo-github-action@v7
         with:
           expo-version: latest
-          eas-version: 2.3.0
+          eas-version: ${{ steps.set_eas_version.outputs.EAS_VERSION }}
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Install Dependencies
