@@ -19,7 +19,7 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "io.github.rwreplog",
+      "bundleIdentifier": "io.github.rwreplog.react_game",
       "supportsTablet": true
     },
     "android": {
@@ -27,7 +27,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "io.github.rwreplog"
+      "package": "io.github.rwreplog.react_game"
     },
     "web": {
       "favicon": "./assets/favicon.png"
