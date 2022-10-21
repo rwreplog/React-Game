@@ -4,7 +4,7 @@ export default function Player({ position, size }) {
   return (
     <View
       style={{
-        width: 50,
+        width: size,
         height: size,
         backgroundColor: "red",
         position: "absolute",
