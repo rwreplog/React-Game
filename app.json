@@ -3,6 +3,7 @@
     "owner": "dude0001",
     "name": "ReactGame",
     "slug": "ReactGame",
+    "privacy": "unlisted",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
