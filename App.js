@@ -5,6 +5,7 @@ import {
   Text,
   StatusBar,
   StyleSheet,
+  TouchableOpacity,
 } from "react-native";
 
 import {
@@ -16,7 +17,6 @@ import {
 } from "react-native/Libraries/NewAppScreen";
 
 import { GameEngine } from "react-native-game-engine";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 import React, { useRef, useState, Fragment } from "react";
 import GameLoop from "./systems/GameLoop";
