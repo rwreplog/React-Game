@@ -14,178 +14,90 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from "react-native/Libraries/NewAppScreen";
-
+import Bird from "./components/bird";
 import { GameEngine } from "react-native-game-engine";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import Matter from "matter-js";
 
-import React, { useRef, useState, Fragment } from "react";
+import React, { Component, useRef, useState, Fragment } from "react";
 import GameLoop from "./systems/GameLoop";
 import Constants from "./Constants/Constants";
 import Player from "./components/player";
-import Food from "./components/food";
+import Wall from "./components/wall";
 import Tail from "./components/tail";
+import Physics from "./physics";
 
-export default function App() {
-  const BoardSize = Constants.GRID_SIZE * Constants.CELL_SIZE;
-  const engine = useRef(null);
-  const [isGameRunning, setIsGameRunning] = useState(true);
-  const randomPositions = (min, max) => {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  };
-  const resetGame = () => {
-    engine.current.swap({
-      head: {
-        position: [0, 0],
-        size: Constants.CELL_SIZE,
-        updateFrequency: 10,
-        nextMove: 10,
-        xspeed: 0,
-        yspeed: 0,
-        renderer: <Player />,
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.gameEngine = null;
+    this.entities = this.setupWorld();
+  }
+
+  setupWorld = () => {
+    let engine = Matter.Engine.create({ enableSleeping: false });
+    let world = engine.world;
+
+    let bird = Matter.Bodies.rectangle(
+      Constants.MAX_WIDTH / 4,
+      Constants.MAX_HEIGHT / 2,
+      50,
+      50
+    );
+    let floor = Matter.Bodies.rectangle(
+      Constants.MAX_WIDTH / 2,
+      Constants.MAX_HEIGHT - 25,
+      Constants.MAX_WIDTH,
+      50,
+      { isStatic: true }
+    );
+    let ceiling = Matter.Bodies.rectangle(
+      Constants.MAX_WIDTH / 2,
+      25,
+      Constants.MAX_WIDTH,
+      50,
+      { isStatic: true }
+    );
+
+    Matter.World.add(world, [bird, floor]);
+
+    return {
+      physics: { engine: engine, world: world },
+      bird: { body: bird, size: [50, 50], color: "red", renderer: Bird },
+      floor: {
+        body: floor,
+        size: [Constants.MAX_WIDTH, 50],
+        color: "green",
+        renderer: Wall,
       },
-      food: {
-        position: [
-          randomPositions(0, Constants.GRID_SIZE - 1),
-          randomPositions(0, Constants.GRID_SIZE - 1),
-        ],
-        size: Constants.CELL_SIZE,
-        updateFrequency: 10,
-        nextMove: 10,
-        xspeed: 0,
-        yspeed: 0,
-        renderer: <Food />,
+      ceiling: {
+        body: ceiling,
+        size: [Constants.MAX_WIDTH, 50],
+        color: "green",
+        renderer: Wall,
       },
-      tail: {
-        size: Constants.CELL_SIZE,
-        elements: [],
-        renderer: <Tail />,
-      },
-    });
-    setIsGameRunning(true);
+    };
   };
 
-  return (
-    <Fragment>
-      {/* <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}
-        > */}
-      <View style={styles.canvas}>
+  render() {
+    return (
+      <View style={styles.container}>
         <GameEngine
-          ref={engine}
-          style={{
-            width: BoardSize,
-            height: BoardSize,
-            flex: null,
-            backgroundColor: "white",
+          ref={(ref) => {
+            this.gameEngine = ref;
           }}
-          entities={{
-            head: {
-              position: [0, 0],
-              size: Constants.CELL_SIZE,
-              updateFrequency: 10,
-              nextMove: 10,
-              xspeed: 0,
-              yspeed: 0,
-              renderer: <Player />,
-            },
-            food: {
-              position: [
-                randomPositions(0, Constants.GRID_SIZE - 1),
-                randomPositions(0, Constants.GRID_SIZE - 1),
-              ],
-              size: Constants.CELL_SIZE,
-              renderer: <Food />,
-            },
-            tail: {
-              size: Constants.CELL_SIZE,
-              elements: [],
-              renderer: <Tail />,
-            },
-          }}
-          systems={[GameLoop]}
-          running={isGameRunning}
-          onEvent={(e) => {
-            switch (e) {
-              case "game-over":
-                alert("Game over!");
-                setIsGameRunning(false);
-                return;
-            }
-          }}
+          style={styles.gameContainer}
+          systems={[Physics]}
+          entities={this.entities}
         />
-        <View style={styles.controlContainer}>
-          <View style={styles.controllerRow}>
-            <TouchableOpacity
-              onPress={() => engine.current.dispatch("move-up")}
-            >
-              <View style={styles.controlBtn} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.controllerRow}>
-            <TouchableOpacity
-              onPress={() => engine.current.dispatch("move-left")}
-            >
-              <View style={styles.controlBtn} />
-            </TouchableOpacity>
-            <View style={[styles.controlBtn, { backgroundColor: null }]} />
-            <TouchableOpacity
-              onPress={() => engine.current.dispatch("move-right")}
-            >
-              <View style={styles.controlBtn} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.controllerRow}>
-            <TouchableOpacity
-              onPress={() => engine.current.dispatch("move-down")}
-            >
-              <View style={styles.controlBtn} />
-            </TouchableOpacity>
-          </View>
-        </View>
-        {!isGameRunning && (
-          <TouchableOpacity onPress={resetGame}>
-            <Text
-              style={{
-                color: "white",
-                marginTop: 15,
-                fontSize: 22,
-                padding: 10,
-                backgroundColor: "grey",
-                borderRadius: 10,
-              }}
-            >
-              Start New Game
-            </Text>
-          </TouchableOpacity>
-        )}
       </View>
-      {/* </ScrollView>
-      </SafeAreaView> */}
-    </Fragment>
-  );
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-  canvas: {
+  container: {
     flex: 1,
-    backgroundColor: "#000000",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  controlContainer: {
-    marginTop: 10,
-  },
-  controllerRow: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  controlBtn: {
-    backgroundColor: "yellow",
-    width: 100,
-    height: 100,
+    backgroundColor: "#ffffff",
   },
 });
