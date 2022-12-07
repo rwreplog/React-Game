@@ -24,8 +24,8 @@ jobs:
       - name: Run Tests
         run: npm test
 
-  package-android:
-    name: Build Android Package
+  submit:
+    name: Build and Submit
     needs: test
     runs-on: ubuntu-latest
 
@@ -54,4 +54,4 @@ jobs:
         run: npm install
 
       - name: Package App
-        run: eas build --platform android --non-interactive
+        run: eas build --profile development --platform all --auto-submit --non-interactive
