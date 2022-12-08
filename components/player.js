@@ -11,7 +11,7 @@ class Finger extends PureComponent {
   render() {
     const x = this.props.position[0] - RADIUS / 2;
     const y = this.props.position[1] - RADIUS / 2;
-    const t = this.props.text;
+    const t = Math.floor(Math.random() * 20) + 1;
 
     return (
       <TouchableOpacity
