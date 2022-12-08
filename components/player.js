@@ -1,97 +1,49 @@
-import React from "react";
-import { View } from "react-native";
-export default function Player({ position, size }) {
-  var Example = Example || {};
+import React, { PureComponent } from "react";
+import { StyleSheet, View, Text, TouchableOpacity, Button } from "react-native";
 
-  Example.airFriction = function () {
-    var Engine = Matter.Engine,
-      Render = Matter.Render,
-      Runner = Matter.Runner,
-      MouseConstraint = Matter.MouseConstraint,
-      Mouse = Matter.Mouse,
-      Composite = Matter.Composite,
-      Bodies = Matter.Bodies;
+const RADIUS = 20;
 
-    // create engine
-    var engine = Engine.create(),
-      world = engine.world;
+class Finger extends PureComponent {
+  _onPressButton(value) {
+    alert(value);
+  }
 
-    // create renderer
-    var render = Render.create({
-      element: document.body,
-      engine: engine,
-      options: {
-        width: 800,
-        height: 600,
-        showVelocity: true,
-      },
-    });
+  render() {
+    const x = this.props.position[0] - RADIUS / 2;
+    const y = this.props.position[1] - RADIUS / 2;
+    const t = this.props.text;
 
-    Render.run(render);
-    // create runner
-    var runner = Runner.create();
-    Runner.run(runner, engine);
-
-    // add bodies
-    Composite.add(world, [
-      // falling blocks
-      Bodies.rectangle(200, 100, 60, 60, { frictionAir: 0.001 }),
-      Bodies.rectangle(400, 100, 60, 60, { frictionAir: 0.05 }),
-      Bodies.rectangle(600, 100, 60, 60, { frictionAir: 0.1 }),
-
-      // walls
-      Bodies.rectangle(400, 0, 800, 50, { isStatic: true }),
-      Bodies.rectangle(400, 600, 800, 50, { isStatic: true }),
-      Bodies.rectangle(800, 300, 50, 600, { isStatic: true }),
-      Bodies.rectangle(0, 300, 50, 600, { isStatic: true }),
-    ]);
-
-    // add mouse control
-    var mouse = Mouse.create(render.canvas),
-      mouseConstraint = MouseConstraint.create(engine, {
-        mouse: mouse,
-        constraint: {
-          stiffness: 0.2,
-          render: {
-            visible: false,
-          },
-        },
-      });
-
-    Composite.add(world, mouseConstraint);
-
-    // keep the mouse in sync with rendering
-    render.mouse = mouse;
-
-    // fit the render viewport to the scene
-    Render.lookAt(render, {
-      min: { x: 0, y: 0 },
-      max: { x: 800, y: 600 },
-    });
-
-    // context for MatterTools.Demo
-    return {
-      engine: engine,
-      runner: runner,
-      render: render,
-      canvas: render.canvas,
-      stop: function () {
-        Matter.Render.stop(render);
-        Matter.Runner.stop(runner);
-      },
-    };
-  };
-
-  return (
-    <View
-      style={{
-        width: size,
-        height: size,
-        backgroundColor: "red",
-        position: "absolute",
-        left: position[0] * size,
-        top: position[1] * size,
-      }}
-    ></View>
-  );
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          this._onPressButton(t);
+        }}
+        style={[styles.btn, { right: x, top: y }]}
+      >
+        <Text style={[styles.text]}>{t}</Text>
+      </TouchableOpacity>
+    );
+  }
 }
+
+const styles = StyleSheet.create({
+  btn: {
+    position: "absolute",
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    width: RADIUS * 5,
+    height: RADIUS * 5,
+    borderRadius: RADIUS * 5,
+    // borderWidth: 3,
+    // borderColor: "rgba(255, 0, 0, 0.7)",
+  },
+  text: {
+    color: "white",
+    textAlign: "center",
+    marginTop: "auto",
+    marginBottom: "auto",
+    fontSize: 45,
+    fontFamily: "Arial",
+  },
+});
+
+export { Finger };
