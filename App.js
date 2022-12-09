@@ -1,191 +1,105 @@
-import {
-  SafeAreaView,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
-
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from "react-native/Libraries/NewAppScreen";
-
+import React, { PureComponent } from "react";
+import { AppRegistry, Dimensions, StyleSheet, StatusBar } from "react-native";
 import { GameEngine } from "react-native-game-engine";
+import { GameButton } from "./components/button";
+import { Background } from "./components/background";
+import { MoveFinger, colors } from "./systems/GameLoop";
+import { TargetValue } from "./components/targetValue";
+import { Score } from "./components/score";
+import GLOBAL from "./state/global";
 
-import React, { useRef, useState, Fragment } from "react";
-import GameLoop from "./systems/GameLoop";
-import Constants from "./Constants/Constants";
-import Player from "./components/player";
-import Food from "./components/food";
-import Tail from "./components/tail";
+export default class App extends PureComponent {
+  constructor() {
+    super();
 
-export default function App() {
-  const BoardSize = Constants.GRID_SIZE * Constants.CELL_SIZE;
-  const engine = useRef(null);
-  const [isGameRunning, setIsGameRunning] = useState(true);
-  const randomPositions = (min, max) => {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  };
-  const resetGame = () => {
-    engine.current.swap({
-      head: {
-        position: [0, 0],
-        size: Constants.CELL_SIZE,
-        updateFrequency: 10,
-        nextMove: 10,
-        xspeed: 0,
-        yspeed: 0,
-        renderer: <Player />,
-      },
-      food: {
-        position: [
-          randomPositions(0, Constants.GRID_SIZE - 1),
-          randomPositions(0, Constants.GRID_SIZE - 1),
-        ],
-        size: Constants.CELL_SIZE,
-        updateFrequency: 10,
-        nextMove: 10,
-        xspeed: 0,
-        yspeed: 0,
-        renderer: <Food />,
-      },
-      tail: {
-        size: Constants.CELL_SIZE,
-        elements: [],
-        renderer: <Tail />,
-      },
-    });
-    setIsGameRunning(true);
-  };
+    this.state = {
+      targetValue: 0,
+      selectedValue: 0,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      score: 0,
+    };
+    GLOBAL.screen1 = this;
+  }
 
-  return (
-    <Fragment>
-      {/* <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}
-        > */}
-      <View style={styles.canvas}>
-        <GameEngine
-          ref={engine}
-          style={{
-            width: BoardSize,
-            height: BoardSize,
-            flex: null,
-            backgroundColor: "white",
-          }}
-          entities={{
-            head: {
-              position: [0, 0],
-              size: Constants.CELL_SIZE,
-              updateFrequency: 10,
-              nextMove: 10,
-              xspeed: 0,
-              yspeed: 0,
-              renderer: <Player />,
-            },
-            food: {
-              position: [
-                randomPositions(0, Constants.GRID_SIZE - 1),
-                randomPositions(0, Constants.GRID_SIZE - 1),
-              ],
-              size: Constants.CELL_SIZE,
-              renderer: <Food />,
-            },
-            tail: {
-              size: Constants.CELL_SIZE,
-              elements: [],
-              renderer: <Tail />,
-            },
-          }}
-          systems={[GameLoop]}
-          running={isGameRunning}
-          onEvent={(e) => {
-            switch (e) {
-              case "game-over":
-                alert("Game over!");
-                setIsGameRunning(false);
-                return;
-            }
-          }}
-        />
-        <View style={styles.controlContainer}>
-          <View style={styles.controllerRow}>
-            <TouchableOpacity
-              onPress={() => engine.current.dispatch("move-up")}
-            >
-              <View style={styles.controlBtn} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.controllerRow}>
-            <TouchableOpacity
-              onPress={() => engine.current.dispatch("move-left")}
-            >
-              <View style={styles.controlBtn} />
-            </TouchableOpacity>
-            <View style={[styles.controlBtn, { backgroundColor: null }]} />
-            <TouchableOpacity
-              onPress={() => engine.current.dispatch("move-right")}
-            >
-              <View style={styles.controlBtn} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.controllerRow}>
-            <TouchableOpacity
-              onPress={() => engine.current.dispatch("move-down")}
-            >
-              <View style={styles.controlBtn} />
-            </TouchableOpacity>
-          </View>
-        </View>
-        {!isGameRunning && (
-          <TouchableOpacity onPress={resetGame}>
-            <Text
-              style={{
-                color: "white",
-                marginTop: 15,
-                fontSize: 22,
-                padding: 10,
-                backgroundColor: "grey",
-                borderRadius: 10,
-              }}
-            >
-              Start New Game
-            </Text>
-          </TouchableOpacity>
-        )}
-      </View>
-      {/* </ScrollView>
-      </SafeAreaView> */}
-    </Fragment>
-  );
+  render() {
+    return (
+      <GameEngine
+        style={styles.container}
+        systems={[MoveFinger]} //-- We can add as many systems as needed
+        entities={{
+          0: {
+            size: [
+              Dimensions.get("window").height,
+              Dimensions.get("window").height,
+            ],
+            body: { x: 50, y: 50 },
+            radius: 0,
+            bgColor: this.state.color,
+            renderer: <Background />,
+          },
+          1: { text: generateRandomNumber(), renderer: <TargetValue /> },
+          2: {
+            position: [50, 125],
+            text: generateRandomNumber(),
+            renderer: <GameButton />,
+          }, //-- Notice that each entity has a unique id (required)
+          3: {
+            position: [50, 275],
+            text: generateRandomNumber(),
+            renderer: <GameButton />,
+          }, //-- and a map of components. Each entity has an optional
+          4: {
+            position: [50, 525],
+            text: generateRandomNumber(),
+            renderer: <GameButton />,
+          }, //-- renderer component. If no renderer is supplied with the
+          5: {
+            position: [50, 675],
+            text: generateRandomNumber(),
+            renderer: <GameButton />,
+          }, //-- entity - it won't get displayed.
+          6: {
+            position: [270, 125],
+            text: generateRandomNumber(),
+            renderer: <GameButton />,
+          },
+          7: {
+            position: [270, 275],
+            text: generateRandomNumber(),
+            renderer: <GameButton />,
+          },
+          8: {
+            position: [270, 525],
+            text: generateRandomNumber(),
+            renderer: <GameButton />,
+          },
+          9: {
+            position: [270, 675],
+            text: generateRandomNumber(),
+            renderer: <GameButton />,
+          },
+          10: {
+            scoreValue: this.state.score,
+            renderer: <Score />,
+          },
+        }}
+      >
+        <StatusBar hidden={true} />
+      </GameEngine>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-  canvas: {
+  container: {
     flex: 1,
-    backgroundColor: "#000000",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  controlContainer: {
-    marginTop: 10,
-  },
-  controllerRow: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  controlBtn: {
-    backgroundColor: "yellow",
-    width: 100,
-    height: 100,
+    backgroundColor: "#FFF",
   },
 });
+
+const generateRandomNumber = () => {
+  const num = Math.floor(Math.random() * 99) + 1;
+  return num;
+};
+
+AppRegistry.registerComponent("BestGameEver", () => BestGameEver);
