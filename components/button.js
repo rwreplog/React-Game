@@ -8,7 +8,7 @@ class GameButton extends PureComponent {
   _onPressButton(value) {
     const selection = Number(GLOBAL.screen1.state.targetValue) + Number(value);
     const targetColor = GLOBAL.screen1.state.color;
-    alert(GLOBAL.screen1.state.score);
+
     if (targetColor === "#FF0000") {
       if (selection % 2 == 0) {
         GLOBAL.screen1.setState({
