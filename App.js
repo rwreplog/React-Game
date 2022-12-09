@@ -1,30 +1,15 @@
 import React, { PureComponent } from "react";
-import { AppRegistry, StyleSheet, StatusBar } from "react-native";
+import { AppRegistry, Dimensions, StyleSheet, StatusBar } from "react-native";
 import { GameEngine } from "react-native-game-engine";
-import { Finger } from "./components/player";
+import { GameButton } from "./components/button";
+import { Background } from "./components/background";
 import { MoveFinger } from "./systems/GameLoop";
+import { TargetValue } from "./components/targetValue";
 
-//const { width: WIDTH, height: HEIGHT } = Dimensions.get("window");
-const RADIUS = 25;
-let counter = 0;
 export default class App extends PureComponent {
   constructor() {
     super();
-    // this.state = {
-    //   x: WIDTH / 2 - 45,
-    //   y: HEIGHT / 2 - 50,
-    // };
   }
-
-  updateHandler = ({ touches, screen, layout, time }) => {
-    // let move = touches.find((x) => x.type === "move");
-    // if (move) {
-    //   this.setState({
-    //     x: this.state.x + move.delta.pageX,
-    //     y: this.state.y + move.delta.pageY,
-    //   });
-    // }
-  };
 
   render() {
     return (
@@ -32,14 +17,25 @@ export default class App extends PureComponent {
         style={styles.container}
         systems={[MoveFinger]} //-- We can add as many systems as needed
         entities={{
-          1: { position: [50, 125], text: "1", renderer: <Finger /> }, //-- Notice that each entity has a unique id (required)
-          2: { position: [50, 275], text: "19", renderer: <Finger /> }, //-- and a map of components. Each entity has an optional
-          3: { position: [50, 525], text: "7", renderer: <Finger /> }, //-- renderer component. If no renderer is supplied with the
-          4: { position: [50, 675], text: "4", renderer: <Finger /> }, //-- entity - it won't get displayed.
-          5: { position: [270, 125], text: "15", renderer: <Finger /> },
-          6: { position: [270, 275], text: "15", renderer: <Finger /> },
-          7: { position: [270, 525], text: "15", renderer: <Finger /> },
-          8: { position: [270, 675], text: "15", renderer: <Finger /> },
+          0: {
+            size: [
+              Dimensions.get("window").height,
+              Dimensions.get("window").height,
+            ],
+            body: { x: 50, y: 50 },
+            radius: 0,
+            bgColor: "#00ff00",
+            renderer: <Background />,
+          },
+          1: { text: "3 + ", renderer: <TargetValue /> },
+          2: { position: [50, 125], text: "1", renderer: <GameButton /> }, //-- Notice that each entity has a unique id (required)
+          3: { position: [50, 275], text: "19", renderer: <GameButton /> }, //-- and a map of components. Each entity has an optional
+          4: { position: [50, 525], text: "7", renderer: <GameButton /> }, //-- renderer component. If no renderer is supplied with the
+          5: { position: [50, 675], text: "4", renderer: <GameButton /> }, //-- entity - it won't get displayed.
+          6: { position: [270, 125], text: "15", renderer: <GameButton /> },
+          7: { position: [270, 275], text: "15", renderer: <GameButton /> },
+          8: { position: [270, 525], text: "15", renderer: <GameButton /> },
+          9: { position: [270, 675], text: "15", renderer: <GameButton /> },
         }}
       >
         <StatusBar hidden={true} />
@@ -54,141 +50,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
   },
 });
-
-//   render() {
-//     return (
-//       <GameLoop style={styles.container} onUpdate={this.updateHandler}>
-//         <View
-//           // style={[styles.player, { left: this.state.x, top: this.state.y }]}
-//           style={[styles.player, { left: this.state.x, top: this.state.y }]}
-//         >
-//           <Text style={[styles.targetText]}>3 +</Text>
-//         </View>
-//         <View style={[styles.btnOne, { left: "5%", top: "10%" }]}>
-//           <Text style={[styles.text]}>22</Text>
-//         </View>
-//         <View style={[styles.btnTwo, { right: "5%", top: "10%" }]}>
-//           <Text style={[styles.text]}>9</Text>
-//         </View>
-//         <View style={[styles.btnThree, { left: "5%", top: "30%" }]}>
-//           <Text style={[styles.text]}>7</Text>
-//         </View>
-//         <View style={[styles.btnFour, { right: "5%", top: "30%" }]}>
-//           <Text style={[styles.text]}>15</Text>
-//         </View>
-//         <View style={[styles.btnFive, { left: "5%", bottom: "10%" }]}>
-//           <Text style={[styles.text]}>3</Text>
-//         </View>
-//         <View style={[styles.btnSix, { right: "5%", bottom: "10%" }]}>
-//           <Text style={[styles.text]}>6</Text>
-//         </View>
-//         <View style={[styles.btnSeven, { left: "5%", bottom: "30%" }]}>
-//           <Text style={[styles.text]}>17</Text>
-//         </View>
-//         <View style={[styles.btnEight, { right: "5%", bottom: "30%" }]}>
-//           <Text style={[styles.text]}>2</Text>
-//         </View>
-//       </GameLoop>
-//     );
-//   }
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "rgba(0, 0, 255, 0.5)",
-//   },
-//   player: {
-//     // position: "absolute",
-//     // backgroundColor: "pink",
-//     // width: RADIUS * 2,
-//     // height: RADIUS * 2,
-//     // borderRadius: RADIUS * 2,
-//   },
-//   targetText: {
-//     fontSize: 99,
-//     color: "white",
-//     fontFamily: "Arial",
-//   },
-//   text: {
-//     textAlign: "center",
-//     marginTop: "auto",
-//     marginBottom: "auto",
-//     fontSize: 45,
-//     fontFamily: "Arial",
-//   },
-//   btnOne: {
-//     position: "absolute",
-//     backgroundColor: "white",
-//     width: RADIUS * 5,
-//     height: RADIUS * 5,
-//     borderRadius: RADIUS * 5,
-//     borderWidth: 3,
-//     borderColor: "rgba(255, 0, 0, 0.7)",
-//   },
-//   btnTwo: {
-//     position: "absolute",
-//     backgroundColor: "white",
-//     width: RADIUS * 5,
-//     height: RADIUS * 5,
-//     borderRadius: RADIUS * 5,
-//     borderWidth: 3,
-//     borderColor: "rgba(255, 0, 0, 0.7)",
-//   },
-//   btnThree: {
-//     position: "absolute",
-//     backgroundColor: "white",
-//     width: RADIUS * 5,
-//     height: RADIUS * 5,
-//     borderRadius: RADIUS * 5,
-//     borderWidth: 3,
-//     borderColor: "rgba(255, 0, 0, 0.7)",
-//   },
-//   btnFour: {
-//     position: "absolute",
-//     backgroundColor: "white",
-//     width: RADIUS * 5,
-//     height: RADIUS * 5,
-//     borderRadius: RADIUS * 5,
-//     borderWidth: 3,
-//     borderColor: "rgba(255, 0, 0, 0.7)",
-//   },
-//   btnFive: {
-//     position: "absolute",
-//     backgroundColor: "white",
-//     width: RADIUS * 5,
-//     height: RADIUS * 5,
-//     borderRadius: RADIUS * 5,
-//     borderWidth: 3,
-//     borderColor: "rgba(255, 0, 0, 0.7)",
-//   },
-//   btnSix: {
-//     position: "absolute",
-//     backgroundColor: "white",
-//     width: RADIUS * 5,
-//     height: RADIUS * 5,
-//     borderRadius: RADIUS * 5,
-//     borderWidth: 3,
-//     borderColor: "rgba(255, 0, 0, 0.7)",
-//   },
-//   btnSeven: {
-//     position: "absolute",
-//     backgroundColor: "white",
-//     width: RADIUS * 5,
-//     height: RADIUS * 5,
-//     borderRadius: RADIUS * 5,
-//     borderWidth: 3,
-//     borderColor: "rgba(255, 0, 0, 0.7)",
-//   },
-//   btnEight: {
-//     position: "absolute",
-//     backgroundColor: "white",
-//     width: RADIUS * 5,
-//     height: RADIUS * 5,
-//     borderRadius: RADIUS * 5,
-//     borderWidth: 3,
-//     borderColor: "rgba(255, 0, 0, 0.7)",
-//   },
-// });
 
 AppRegistry.registerComponent("BestGameEver", () => BestGameEver);
