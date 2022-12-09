@@ -6,8 +6,30 @@ const RADIUS = 20;
 
 class GameButton extends PureComponent {
   _onPressButton(value) {
-    // alert(value);
-    alert(GLOBAL.screen1.state.targetValue + " + " + value);
+    const selection = Number(GLOBAL.screen1.state.targetValue) + Number(value);
+    const targetColor = GLOBAL.screen1.state.color;
+    alert(GLOBAL.screen1.state.score);
+    if (targetColor === "#FF0000") {
+      if (selection % 2 == 0) {
+        GLOBAL.screen1.setState({
+          score: GLOBAL.screen1.state.score + 1,
+        });
+      } else {
+        GLOBAL.screen1.setState({
+          score: GLOBAL.screen1.state.score - 1,
+        });
+      }
+    } else if (targetColor === "#00FF00") {
+      if (selection % 2 == 0) {
+        GLOBAL.screen1.setState({
+          score: GLOBAL.screen1.state.score - 1,
+        });
+      } else {
+        GLOBAL.screen1.setState({
+          score: GLOBAL.screen1.state.score + 1,
+        });
+      }
+    }
   }
 
   render() {
