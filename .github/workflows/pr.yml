@@ -37,14 +37,15 @@ jobs:
       - name: Run Tests
         run: npm test
 
-  package-android:
-    name: Build Android Package
+  package:
+    name: Package
     needs: test
     environment:
       name: PR
     runs-on: ubuntu-latest
 
     steps:
+
       - uses: actions/checkout@v3
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
@@ -72,4 +73,4 @@ jobs:
         run: npm install
 
       - name: Package App
-        run: eas build --profile development --platform android --non-interactive
+        run: eas build --profile development --platform all --non-interactive
