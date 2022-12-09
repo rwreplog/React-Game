@@ -1,11 +1,13 @@
 import React, { PureComponent } from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import GLOBAL from "../state/global";
 
 const RADIUS = 20;
 
 class GameButton extends PureComponent {
   _onPressButton(value) {
-    alert(value);
+    // alert(value);
+    alert(GLOBAL.screen1.state.targetValue + " + " + value);
   }
 
   render() {

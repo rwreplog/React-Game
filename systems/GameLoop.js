@@ -1,4 +1,5 @@
 import { Dimensions } from "react-native";
+import GLOBAL from "../state/global";
 
 let timer = 0.0;
 const colors = ["#FF0000", "#00FF00"];
@@ -35,6 +36,10 @@ const MoveFinger = (entities, { touches, time }) => {
     entities[7].text = (Math.floor(Math.random() * 99) + 1).toString();
     entities[8].text = (Math.floor(Math.random() * 99) + 1).toString();
     entities[9].text = (Math.floor(Math.random() * 99) + 1).toString();
+
+    GLOBAL.screen1.setState({
+      targetValue: entities[1].text,
+    });
   }
 
   //console.log(timer);

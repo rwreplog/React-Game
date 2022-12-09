@@ -5,10 +5,17 @@ import { GameButton } from "./components/button";
 import { Background } from "./components/background";
 import { MoveFinger } from "./systems/GameLoop";
 import { TargetValue } from "./components/targetValue";
+import GLOBAL from "./state/global";
 
 export default class App extends PureComponent {
   constructor() {
     super();
+
+    this.state = {
+      targetValue: 0,
+      selectedValue: 0,
+    };
+    GLOBAL.screen1 = this;
   }
 
   render() {
