@@ -41,7 +41,7 @@ jobs:
       - name: Set EAS version
         id: set_eas_version
         run: |
-          echo "::set-output name=EAS_VERSION::$(jq .cli.version eas.json -r)"
+          echo "name=EAS_VERSION::$(jq .cli.version eas.json -r)" >> $GITHUB_OUTPUT
 
       - name: Setup Expo and EAS
         uses: expo/expo-github-action@v7
